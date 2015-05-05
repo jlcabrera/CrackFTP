@@ -29,28 +29,19 @@ public class TestFTP {
             if(mensaje.contains("220")){
                 System.out.println(mensaje);
                 System.out.println("login de ftp ok");
-                salida.println("user prueba");
+                salida.println("user usuario");
                 salida.flush();
                 
                 System.out.println(entrada.readLine());
-                salida.println("pass prueba");
+                salida.println("pass usuario");
                 salida.flush();
                 
                 System.out.println(entrada.readLine());
-//                entrada.readLine();
-//                salida.print("prueba");
-//                if(entrada.readLine().contains("230")){
-//                    System.out.println("login con prueba conseguido");
-//                }else{
-//                    System.out.println("logint con prueba fallido");
-//                }
+//                
             }else{
                 System.out.println("error login");
             }
-            //salida.print("ftp prueba");
-            
-            
-            //Establecer conexion
+           
             
             
         } catch (IOException ex) {
