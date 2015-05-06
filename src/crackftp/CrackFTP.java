@@ -14,13 +14,19 @@ public class CrackFTP {
 
   
     public static void main(String[] args) {
-       
-        if(validarParametros(args)){
-           //crackeadro con hilos
-           System.out.println("Parametros validos");
-       }else{
-           System.out.println("Parametros no validos");
-       }
+        if(args.length >= 2 && args.length <= 3){
+        
+            if(validarParametros(args)){
+               //crackeadro con hilos
+               System.out.println("Parametros validos");
+           }else{
+               System.out.println("Parametros no validos");
+           }
+        }else{
+            System.out.println("El numero de parametros no es el correcto");
+        }
+            
+        
         
     }
     
@@ -45,8 +51,6 @@ public class CrackFTP {
         if(ficherosValidos && hilosValidos){
             paramsValidos = true;
         }
-        
-        
         return paramsValidos;
     }
     
@@ -60,6 +64,11 @@ public class CrackFTP {
             validos = true;
         }else{
             System.out.println("alguno de los ficheros no está bien escrito o no están en la ubicación correcta");
+        }
+        
+        //Con esto comprobamos que los ficheros no sean iguales de ser así mostramos un mensaje al usuario pero no interrumpimos su comportamiento
+        if(fusuarios.equals(fclaves)){
+            System.out.println("los ficheros pasado por parametros son iguales");
         }
         return validos;
     }

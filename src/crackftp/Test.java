@@ -7,7 +7,7 @@ package crackftp;
 public class Test {
     
     public static void main(String [] args){
-        String p = "usuarios.txt claves.txtS";
+        String p = "usuarios.txt usuarios.txt" ;
         
         
         String[] parametros = p.split(" ");
