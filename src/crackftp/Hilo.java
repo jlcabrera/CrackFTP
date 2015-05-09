@@ -16,9 +16,14 @@ public class Hilo implements Runnable{
     
     private String usuario;
     private BufferedReader claves;
+    private String direccion;
+    private String puerto;
     
-    public Hilo(String usuario, String fclaves){
+    public Hilo(String usuario, String fclaves, String d, String p){
         this.usuario = usuario;
+        this.direccion = d;
+        this.puerto = p;
+        
         try {
             this.claves = new BufferedReader(new FileReader(fclaves));
         } catch (FileNotFoundException ex) {
@@ -37,7 +42,7 @@ public class Hilo implements Runnable{
         try {
             String linea = "";
             while((linea = this.claves.readLine()) != null){
-                Ftp f = new Ftp(this.usuario, linea);
+                Ftp f = new Ftp(this.usuario, linea, this.direccion, this.puerto);
                 if(f.autenticar()){
                     //imprimimos el usuario y contraseña por patanlla y lo metemos en un fichero
                     bw = new BufferedWriter(new FileWriter("restultado.txt"));
@@ -51,7 +56,6 @@ public class Hilo implements Runnable{
                 f.cerrarConexion();
             }
             
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         } catch (IOException ex) {
             Logger.getLogger(Hilo.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
@@ -62,12 +66,13 @@ public class Hilo implements Runnable{
                     Logger.getLogger(Hilo.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+            if(this.claves != null){
+                try {
+                    this.claves.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(Hilo.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }       
         }
-    }
-    
-    public boolean realizarComprobacion(String clave){
-        
-        return false;  
-        
     }
 }

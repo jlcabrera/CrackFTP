@@ -23,41 +23,23 @@ public class Ftp {
     private Socket conexion;
     private BufferedReader in;
     private PrintWriter out;
+    private String direccion;
+    private int puerto;
     
-    public Ftp(String usuario, String clave){
+    public Ftp(String usuario, String clave, String d, String p){
         this.usuario = usuario;
         this.clave = clave;
+        this.direccion = d;
+        this.puerto = Integer.valueOf(p);
         try {
-            this.conexion = new Socket("localhost", 21);
+            this.conexion = new Socket(this.direccion, this.puerto);
             in = new BufferedReader(new InputStreamReader(conexion.getInputStream()));
             out = new PrintWriter(conexion.getOutputStream());
             
         } catch (IOException ex) {
             Logger.getLogger(Ftp.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        finally{
+        }                
             
-            //Cerramos la entrada
-            if(this.in != null){
-                try {
-                    this.in.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(Ftp.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-            
-           if(this.out != null){
-               this.out.close();
-           }
-            //cerramos la conexion.
-            if(this.conexion != null){
-                try {
-                    this.conexion.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(Ftp.class.getName()).log(Level.SEVERE, null, ex);
-                }                            
-            }
-        }
     }
     
     //Metodo para la autetiticacion del ftp

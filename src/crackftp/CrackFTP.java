@@ -3,20 +3,25 @@
  */
 package crackftp;
 
+
 import java.io.File;
 
 public class CrackFTP {
-
-	private static String usuarios;
-	private static String claves;
+ 
+	
 	private static int hilos;
 
 	public static void main(String[] args) {
             if (args != null && args.length >= 2 && args.length <= 3) {
 
                 if (validarParametros(args)) {
-                        // crackeadro con hilos
+                        
                     System.out.println("Parametros validos");
+                    
+                    //Creamos el objeto para crackear hilos
+                    GestorHilos gh = new GestorHilos(args[0], args[1], CrackFTP.hilos);
+                    gh.iniciarCrack();
+                    
                 } else {
                     System.out.println("Parametros no validos");
                 }
@@ -27,49 +32,44 @@ public class CrackFTP {
 
 	// metodo para validar los parametros que se pasen a través de la consola
 	public static boolean validarParametros(String[] params) {
-            boolean paramsValidos = false;
-            boolean ficherosValidos = false;
-            boolean hilosValidos = false;
-
-            String u = params[0], c = params[1], h = "";
+            
+            String d = params[0], p = params[1], h = "";
             if (params.length == 3) {
                 h = params[2];
             }
-
-            // Empezamos comprobando si existen los ficheros que nos pasan por
-            // parametros llamando a otro metodo
-            ficherosValidos = validarFicheros(u, c);
-
-            // Comprobamos con el siguiente metodo si el parametro numero de hilos
-            // está o no, y si es así asignamos el numero de hilos
-            hilosValidos = validarNumeroHilos(h);
-
-            if (ficherosValidos && hilosValidos) {
-                paramsValidos = true;
-            }
-            return paramsValidos;
+            
+            return validarFicheros() && validarDatosConexion(p) && validarNumeroHilos(h);
 	}
-
+        
 	// metodo para validar los ficheros que nos deberan de pasar por parametros
 	// cuando ejecuten la aplicacion
-	public static boolean validarFicheros(String usuarios, String claves) {
-		boolean validos = false;
+        
+        public static boolean validarFicheros(){
+            boolean validos = false;
 
-		File fusuarios = new File(usuarios);
-		File fclaves = new File(claves);
+		File fusuarios = new File("usuarios.txt");
+		File fclaves = new File("claves.txt");
 		if (fusuarios.exists() && fclaves.exists()) {
 			validos = true;
 		} else {
-			System.out.println("alguno de los ficheros no está bien escrito o no están en la ubicación correcta");
+			System.out.println("Algunos de los ficheros (usuario o claves) no existe o no esta en la ubicacion correcta");
 		}
-		
-		// Con esto comprobamos que los ficheros no sean iguales de ser así
-		// mostramos un mensaje al usuario pero no interrumpimos su
-		// comportamiento
-		if (fusuarios.equals(fclaves)) {
-			System.out.println("los ficheros pasado por parametros son iguales");
-		}
-		return validos;
+                return validos;
+        }
+        
+        // metodo que comprueba los datos de conexion, 
+	public static boolean validarDatosConexion(String puerto) {
+            //solo validamos el puerto ya que tiene un rango limitado la validación, dejamos que sea el socket que realice tal tarea a través de su excepcion
+            
+            boolean datosValidos = false;
+            int p = Integer.valueOf(puerto);
+            if(p >= 0 && p <= 65535){
+                datosValidos = true;
+            }else{
+                datosValidos = false;
+                System.out.println("El puerto que ha introducido no es válido");
+            }
+            return datosValidos;
 	}
 
 	// metodo para validar si nos han pasado un numero determinado de hilos o
