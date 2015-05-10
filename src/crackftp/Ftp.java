@@ -45,25 +45,33 @@ public class Ftp {
     //Metodo para la autetiticacion del ftp
     public boolean autenticar(){
         boolean autenticado = false;
-        escribirUsuario();
-        escribirPass();
-        String respuesta;
         try {
-            respuesta = this.in.readLine();
-        
-            System.out.println(respuesta);
-            if(respuesta.contains("220")){
-                autenticado = true;
+        if(this.in.readLine().contains("220")){
+            escribirUsuario();
+            if(this.in.readLine().contains("331")){
+            escribirPass();
             }else{
-                this.out.println("bye");
-                this.out.flush();
+                System.out.println("han ocurrido un error");
             }
+            String respuesta;
+
+                respuesta = this.in.readLine();
+
+                System.out.println(respuesta);
+                if(respuesta.contains("230")){
+                    autenticado = true;
+                }else{
+                    this.out.println("bye");
+                    this.out.flush();
+                }
+            }    
         } catch (IOException ex) {
             Logger.getLogger(Ftp.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         return autenticado;
     }
+    
     
     //Metodo par aescribir el usuario 
     public void escribirUsuario(){

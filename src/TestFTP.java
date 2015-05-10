@@ -32,7 +32,7 @@ public class TestFTP {
                 salida.println("user usuario");
                 salida.flush();
                 
-                System.out.println(entrada.readLine());
+                //System.out.println(entrada.readLine());
                 salida.println("pass usuario");
                 salida.flush();
                 
