@@ -5,6 +5,12 @@ package crackftp;
 
 
 import java.io.File;
+import java.io.IOException;
+import java.net.NoRouteToHostException;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CrackFTP {
  
@@ -20,8 +26,10 @@ public class CrackFTP {
                     
                     //Creamos el objeto para crackear hilos
                     GestorHilos gh = new GestorHilos(args[0], args[1], CrackFTP.hilos);
+                    long inicio = System.currentTimeMillis();
                     gh.iniciarCrack();
-                    
+                    long fin = System.currentTimeMillis();
+                    System.out.println("El programa ha tardado en terminar:as " + (fin - inicio) / 1000);
                 } else {
                     System.out.println("Parametros no validos");
                 }
@@ -37,8 +45,8 @@ public class CrackFTP {
             if (params.length == 3) {
                 h = params[2];
             }
-            
-            return validarFicheros() && validarDatosConexion(p) && validarNumeroHilos(h);
+            validarDatosConexion(d, p);
+            return validarFicheros() && validarNumeroHilos(h);
 	}
         
 	// metodo para validar los ficheros que nos deberan de pasar por parametros
@@ -58,18 +66,31 @@ public class CrackFTP {
         }
         
         // metodo que comprueba los datos de conexion, 
-	public static boolean validarDatosConexion(String puerto) {
-            //solo validamos el puerto ya que tiene un rango limitado la validación, dejamos que sea el socket que realice tal tarea a través de su excepcion
-            
-            boolean datosValidos = false;
-            int p = Integer.valueOf(puerto);
-            if(p >= 0 && p <= 65535){
-                datosValidos = true;
-            }else{
-                datosValidos = false;
-                System.out.println("El puerto que ha introducido no es válido");
+	public static void validarDatosConexion(String direccion, String puerto) {
+            Socket s = null;
+            try {
+                //solo validamos el puerto ya que tiene un rango limitado la validación, dejamos que sea el socket que realice tal tarea a través de su excepcion
+
+                s = new Socket(direccion, Integer.valueOf(puerto));
+            }catch(UnknownHostException e){
+                System.out.println("La direccion de la maquina es desconocido");
+                System.exit(0);
+            }catch(NoRouteToHostException e){
+                System.out.println("No hay visibilidad hasta el servidor");
+                System.exit(0);
+            }catch (IOException ex) {
+                Logger.getLogger(CrackFTP.class.getName()).log(Level.SEVERE, null, ex);
+                System.exit(0);
+            }finally{
+                if(s != null){
+                    try {
+                        s.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(CrackFTP.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
-            return datosValidos;
+            
 	}
 
 	// metodo para validar si nos han pasado un numero determinado de hilos o
@@ -92,5 +113,6 @@ public class CrackFTP {
 
 		return valido;
 	}
+        
 
 }

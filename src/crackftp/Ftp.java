@@ -9,7 +9,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.ConnectException;
 import java.net.Socket;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,9 +39,14 @@ public class Ftp {
             in = new BufferedReader(new InputStreamReader(conexion.getInputStream()));
             out = new PrintWriter(conexion.getOutputStream());
             
-        } catch (IOException ex) {
+        } catch(ConnectException e){
+            System.out.println("La conexion fue rechazada");
+            
+        }catch(SocketException e){
+            System.out.println("Ha ocurrido un problema con el socket");
+        }catch (IOException ex) {
             Logger.getLogger(Ftp.class.getName()).log(Level.SEVERE, null, ex);
-        }                
+        }           
             
     }
     
@@ -53,11 +61,7 @@ public class Ftp {
             }else{
                 System.out.println("han ocurrido un error");
             }
-            String respuesta;
-
-                respuesta = this.in.readLine();
-
-                System.out.println(respuesta);
+            String respuesta = this.in.readLine();
                 if(respuesta.contains("230")){
                     autenticado = true;
                 }else{

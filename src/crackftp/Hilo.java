@@ -18,12 +18,13 @@ public class Hilo implements Runnable{
     private BufferedReader claves;
     private String direccion;
     private String puerto;
+    private GestorHilos gestor;
     
-    public Hilo(String usuario, String fclaves, String d, String p){
+    public Hilo(String usuario, String fclaves, String d, String p, GestorHilos gh){
         this.usuario = usuario;
         this.direccion = d;
         this.puerto = p;
-        
+        this.gestor = gh;
         try {
             this.claves = new BufferedReader(new FileReader(fclaves));
         } catch (FileNotFoundException ex) {
@@ -36,17 +37,18 @@ public class Hilo implements Runnable{
     // Metodo run al que llamaremos para realizar las comprobaciones de las diferentes claves
     @Override
     public void run() {
-        //Creamos la siguiente objeto para dejar el resultado en un fichero
-        BufferedWriter bw = null;
         
+        BufferedWriter bw = null;
         try {
             String linea = "";
             while((linea = this.claves.readLine()) != null){
                 Ftp f = new Ftp(this.usuario, linea, this.direccion, this.puerto);
                 if(f.autenticar()){
                     //imprimimos el usuario y contraseña por patanlla y lo metemos en un fichero
-                    bw = new BufferedWriter(new FileWriter("restultado.txt"));
-                    bw.write("usuario: " + this.usuario + " clave: " + linea);
+                    System.out.println("Usuario encontrado: \n"
+                            + " usuario: " + this.usuario + "pass: " + linea );
+                    bw = new BufferedWriter(new FileWriter("restultado.txt",true));
+                    bw.write("usuario: " + this.usuario + ", clave: " + linea);
                     bw.newLine();
                     bw.flush();
                     System.out.println("");
@@ -55,6 +57,8 @@ public class Hilo implements Runnable{
                 
                 f.cerrarConexion();
             }
+            this.gestor.decrementarContador();
+            this.gestor.desbloquearHilos();
             
         } catch (IOException ex) {
             Logger.getLogger(Hilo.class.getName()).log(Level.SEVERE, null, ex);
