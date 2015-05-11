@@ -42,7 +42,7 @@ public class TestFTP {
                 System.out.println("error login");
             }
            
-            
+            s.close();
             
         } catch (IOException ex) {
             Logger.getLogger(TestFTP.class.getName()).log(Level.SEVERE, null, ex);

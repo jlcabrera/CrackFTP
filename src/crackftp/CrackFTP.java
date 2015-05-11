@@ -41,12 +41,14 @@ public class CrackFTP {
 	// metodo para validar los parametros que se pasen a través de la consola
 	public static boolean validarParametros(String[] params) {
             
-            String d = params[0], p = params[1], h = "";
+            String direccion = params[0];
+            String puerto = params[1];
+            String hilos = "";
             if (params.length == 3) {
-                h = params[2];
+                hilos = params[2];
             }
-            validarDatosConexion(d, p);
-            return validarFicheros() && validarNumeroHilos(h);
+            validarDatosConexion(direccion, puerto);
+            return validarFicheros() && validarNumeroHilos(hilos);
 	}
         
 	// metodo para validar los ficheros que nos deberan de pasar por parametros

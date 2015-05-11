@@ -12,7 +12,6 @@ import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,6 +27,9 @@ public class Ftp {
     private PrintWriter out;
     private String direccion;
     private int puerto;
+    private static final String LOGIN_SUCCESFUL = "230";
+    private static final String CONEXION_REALIZADA = "220";
+    private static final String PETICION_PASS = "331";
     
     public Ftp(String usuario, String clave, String d, String p){
         this.usuario = usuario;
@@ -54,15 +56,15 @@ public class Ftp {
     public boolean autenticar(){
         boolean autenticado = false;
         try {
-        if(this.in.readLine().contains("220")){
+        if(this.in.readLine().contains(CONEXION_REALIZADA)){
             escribirUsuario();
-            if(this.in.readLine().contains("331")){
+            if(this.in.readLine().contains(PETICION_PASS)){
             escribirPass();
             }else{
                 System.out.println("han ocurrido un error");
             }
             String respuesta = this.in.readLine();
-                if(respuesta.contains("230")){
+                if(respuesta.contains(LOGIN_SUCCESFUL)){
                     autenticado = true;
                 }else{
                     this.out.println("bye");
@@ -71,6 +73,8 @@ public class Ftp {
             }    
         } catch (IOException ex) {
             Logger.getLogger(Ftp.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+        	cerrarConexion();
         }
         
         return autenticado;
