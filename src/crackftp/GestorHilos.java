@@ -51,13 +51,16 @@ public class GestorHilos {
 				Thread t = new Thread(h);
 				t.start();
 				añadirHilo(h);
+                               
 			}
+                                                 
 		} catch (FileNotFoundException ex) {
 			System.out.println("El fichero no se ha encontrado");
 		} catch (IOException ex) {
 			Logger.getLogger(GestorHilos.class.getName()).log(Level.SEVERE,
 					null, ex);
 		} finally {
+                    hilosTerminados();
 			// Cerramos el fichero para leer el usuario.
 			if (br != null) {
 				try {
@@ -101,12 +104,11 @@ public class GestorHilos {
 	public synchronized void hilosTerminados(){
 		while(this.hilosEjecucion.size() != 0){
 			try {
-				Thread.sleep(1000);
+				this.wait();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-			}
-			
-			System.out.println("ejecucion terminada");
+                        }
 		}
+                System.out.println("ejecucion terminada");
 	}
 }

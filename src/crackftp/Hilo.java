@@ -4,10 +4,8 @@
 package crackftp;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,7 +36,7 @@ public class Hilo implements Runnable{
     @Override
     public void run() {
         
-        BufferedWriter bw = null;
+        
         try {
             String linea = "";
             while((linea = this.claves.readLine()) != null){
@@ -47,29 +45,22 @@ public class Hilo implements Runnable{
                     //imprimimos el usuario y contraseña por patanlla y lo metemos en un fichero
                     System.out.println("Usuario encontrado: \n"
                             + " usuario: " + this.usuario + "pass: " + linea );
-                    bw = new BufferedWriter(new FileWriter("restultado.txt",true));
-                    bw.write("usuario: " + this.usuario + ", clave: " + linea);
-                    bw.newLine();
-                    bw.flush();
-                    System.out.println("");
+                    String nuevaLinea = "usuario: " + this.usuario + ", pass" + linea;
+                   FicheroResultado fr = new FicheroResultado("resultado.txt", nuevaLinea);
+                   fr.escribirLinea();
                     break;
                 }
-                
                 f.cerrarConexion();
             }
-            this.gestor.decrementarContador();
-            this.gestor.desbloquearHilos();
+            
             
         } catch (IOException ex) {
             Logger.getLogger(Hilo.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
-            if(bw != null){
-                try {
-                    bw.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(Hilo.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
+            
+            this.gestor.quitarHilo(this);
+            this.gestor.desbloquearHilos();
+            
             if(this.claves != null){
                 try {
                     this.claves.close();
