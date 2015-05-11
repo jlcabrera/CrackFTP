@@ -109,6 +109,6 @@ public class GestorHilos {
 				e.printStackTrace();
                         }
 		}
-                System.out.println("ejecucion terminada");
+                System.out.println("Todos los hilos han terminado");
 	}
 }

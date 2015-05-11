@@ -29,7 +29,7 @@ public class CrackFTP {
                     long inicio = System.currentTimeMillis();
                     gh.iniciarCrack();
                     long fin = System.currentTimeMillis();
-                    System.out.println("El programa ha tardado en terminar:as " + (fin - inicio) / 1000);
+                    System.out.println("El programa ha tardado en terminar: " + (fin - inicio) / 1000 + " segundos");
                 } else {
                     System.out.println("Parametros no validos");
                 }
