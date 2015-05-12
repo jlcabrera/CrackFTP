@@ -1,25 +1,22 @@
 package crackftp;
 
 import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FicheroResultado {
 	
-	private String fichero;
 	private String linea;
+	private BufferedWriter bw;
 	
-	public FicheroResultado(String fichero, String linea){
-		this.fichero = fichero;
+	public FicheroResultado(String linea, BufferedWriter bw){
 		this.linea = linea;
+		this.bw = bw;
 	}
 	
 	public synchronized void escribirLinea(){
-             BufferedWriter bw = null;
             try {
-                bw = new BufferedWriter(new FileWriter(this.fichero, true));
                 bw.write(this.linea);
                 bw.newLine();
                 bw.flush();

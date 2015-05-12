@@ -76,13 +76,13 @@ public class CrackFTP {
                 s = new Socket(direccion, Integer.valueOf(puerto));
             }catch(UnknownHostException e){
                 System.out.println("La direccion de la maquina es desconocido");
-                System.exit(0);
+                System.exit(-1);
             }catch(NoRouteToHostException e){
                 System.out.println("No hay visibilidad hasta el servidor");
-                System.exit(0);
+                System.exit(-1);
             }catch (IOException ex) {
                 Logger.getLogger(CrackFTP.class.getName()).log(Level.SEVERE, null, ex);
-                System.exit(0);
+                System.exit(-1);
             }finally{
                 if(s != null){
                     try {
