@@ -50,7 +50,7 @@ public class GestorHilos {
 				Hilo h = new Hilo(usuario, "claves.txt",this.direccion, this.puerto, this);
 				Thread t = new Thread(h);
 				t.start();
-				añadirHilo(h);
+				addHilo(h);
                                
 			}
                                                  
@@ -74,7 +74,7 @@ public class GestorHilos {
 	}
 
 	// Metodo para incrementar el contador de los hilos en ejecución
-	public synchronized void añadirHilo(Hilo hilo){
+	public synchronized void addHilo(Hilo hilo){
 		this.hilosEjecucion.add(hilo);
 	}
 
